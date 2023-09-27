@@ -73,7 +73,7 @@ def conditional(Xnew, X, kern, f, full_cov=False, q_sqrt=None, whiten=False,
     Lm = torch.cholesky(Kmm, upper=False)
 
     # Compute the projection matrix A
-    A, _ = torch.linalg.solve(Kmn, Lm)
+    A, _ = torch.linalg.solve_triangular(Kmn, Lm, upper=False)
 
     # compute the covariance due to the conditioning
     if full_cov:
@@ -87,7 +87,7 @@ def conditional(Xnew, X, kern, f, full_cov=False, q_sqrt=None, whiten=False,
     # another backsubstitution in the unwhitened case 
     # (complete the inverse of the cholesky decomposition)
     if not whiten:
-        A, _ = torch.linalg.solve(A, Lm.t())
+        A, _ = torch.linalg.solve_triangular(A, Lm.t(), upper=True)
 
     # construct the conditional mean
     fmean = torch.matmul(A.t(), f)
@@ -159,7 +159,7 @@ def conditional2(Xnew, X, kern, f, full_cov=False, q_sqrt=None, whiten=False,
     Lm = torch.cholesky(Kmm, upper=False)
     
     # Compute the projection matrix A
-    A, _ = torch.linalg.solve(Kmn, Lm)
+    A, _ = torch.linalg.solve_triangular(Kmn, Lm, upper=False)
     
     # compute the covariance due to the conditioning
     if full_cov:
@@ -173,7 +173,7 @@ def conditional2(Xnew, X, kern, f, full_cov=False, q_sqrt=None, whiten=False,
     # another backsubstitution in the unwhitened case 
     # (complete the inverse of the cholesky decomposition)
     if not whiten:
-        A, _ = torch.linalg.solve(A, Lm.t())
+        A, _ = torch.linalg.solve_triangular(A, Lm.t(), upper=True)
 
     # construct the conditional mean
     fmean = torch.matmul(A.t(), f)
