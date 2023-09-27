@@ -73,7 +73,7 @@ def conditional(Xnew, X, kern, f, full_cov=False, q_sqrt=None, whiten=False,
     Lm = torch.cholesky(Kmm, upper=False)
 
     # Compute the projection matrix A
-    A, _ = torch.solve(Kmn, Lm)
+    A, _ = torch.linalg.solve(Kmn, Lm)
 
     # compute the covariance due to the conditioning
     if full_cov:
